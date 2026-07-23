@@ -1,15 +1,16 @@
 
 package runtime
+import models "vortex-edge/internal/models"
 
-import "vortex-edge/internal/registery"
+// import "vortex-edge/internal/registery"
 
-type Runtime struct {
+type Runtime interface {
 	Run(service*models.Service) error 
 
-	Stop(service* modelsService) error
+	Stop(service*models.Service) error
 	
-	Delete(service* modelsService) error
+	Delete(service* models.Service) error
 
-	Logs(service* modelsService) (string, error)
+	Logs(service* models.Service) (string, error)
 
 }

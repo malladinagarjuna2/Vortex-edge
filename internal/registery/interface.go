@@ -1,7 +1,7 @@
 
 package registery 
 
-import "vortex/internal/models"
+import "vortex-edge/internal/models"
 
 type Registery interface {
 	AddService(service *models.Service) error

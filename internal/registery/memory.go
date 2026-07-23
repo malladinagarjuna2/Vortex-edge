@@ -52,7 +52,7 @@ func (r *MemoryRegistery) List() []*models.Service{
 	}
 	return services
 }
-func (r *MemoryRegistry) Update(service *models.Service) error {
+func (r *MemoryRegistery) Update(service *models.Service) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
