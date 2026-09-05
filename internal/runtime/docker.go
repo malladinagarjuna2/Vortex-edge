@@ -5,7 +5,7 @@ import (
 
 	"vortex-edge/internal/models"
 
-	//     "github.com/moby/moby/client"
+	   "github.com/moby/moby/client"
     // "github.com/moby/moby/api/types"
 )
 
@@ -31,7 +31,8 @@ func NewDockerRuntime() (*DockerRuntime, error) {
 func (d *DockerRuntime) ServerVersion() (string, error) {
     ctx := context.Background()
 
-    version, err := d.client.ServerVersion(ctx)
+    version, err := d.client.ServerVersion(ctx,
+	    client.ServerVersionOptions{},)
     if err != nil {
         return "", err
     }
@@ -66,6 +67,7 @@ func (d *DockerRuntime) Logs(service *models.Service) (string, error) {
 func (d *DockerRuntime) Ping() error {
 	ctx := context.Background()
 
-	_, err := d.client.Ping(ctx)
+	_, err := d.client.Ping(ctx,
+	client.PingOptions{},)
 	return err
 }
