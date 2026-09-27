@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package agent;
+
+option go_package = "vortex-edge/proto";
+
+service NodeAgent {
+    rpc Register(RegisterRequest) returns (RegisterResponse);
+    rpc Heartbeat(HeartbeatRequest) returns (HeartbeatResponse);
+}
+
+message RegisterRequest {
+    string node_id = 1;
+    string name = 2;
+    string address = 3;
+    int32 cpu = 4;
+    int64 memory = 5;
+}
+
+message RegisterResponse {
+    bool accepted = 1;
+}
+
+message HeartbeatRequest {
+    string node_id = 1;
+}
+
+message HeartbeatResponse {
+    bool acknowledged = 1;
+}

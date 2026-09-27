@@ -5,7 +5,8 @@ import(
 
 	"vortex-edge/internal/models"
 )
-
+// yaha pe tumhaari cheeze store ho rahi hai 
+// jb tumhara node register kiya hai toh woh thode der ke liye mutex lock me store hoga 
 type MemoryRegistery struct {
 	services map[string]*models.Service
 	mu  sync.RWMutex
