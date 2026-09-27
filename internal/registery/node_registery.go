@@ -64,3 +64,25 @@ func (r *NodeRegistry) List() []*models.Node {
 
 	return nodes
 }
+
+    //       New Machine
+    //           │
+    //           │ Node Agent starts
+    //           ▼
+    //     ┌─────────────┐
+    //     │ Node Agent  │
+    //     └──────┬──────┘
+    //            │
+    //            │ Register()
+    //            ▼
+    //     ┌─────────────┐
+    //     │   Control   │
+    //     │    Plane    │
+    //     └──────┬──────┘
+    //            │
+    //            ▼
+    //      Node Registry
+    //            │
+    //    ┌───────┴───────┐
+    //    ▼               ▼
+    // node-01         node-02

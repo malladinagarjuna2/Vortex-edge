@@ -3,7 +3,7 @@ package models
 import "time"
 
 type NodeStatus string 
-
+/// node ke baare me bataarahe hai 
 const (
 	NodeReady NodeStatus = "Ready"
 	NodeUnhealthy NodeStatus ="Unhealthy"

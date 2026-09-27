@@ -1,7 +1,7 @@
 package  models 
 import "time"
 type ServiceStatus string 
-
+//service ke baare me bata rahe hai 
 const (
 	Deploying ServiceStatus = "deploying"
 	Running  ServiceStatus = "running"
