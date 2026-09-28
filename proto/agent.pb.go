@@ -28,6 +28,7 @@ type RegisterRequest struct {
 	Address       string                 `protobuf:"bytes,3,opt,name=address,proto3" json:"address,omitempty"`
 	Cpu           int32                  `protobuf:"varint,4,opt,name=cpu,proto3" json:"cpu,omitempty"`
 	Memory        int64                  `protobuf:"varint,5,opt,name=memory,proto3" json:"memory,omitempty"`
+	HostPort      int32                  `protobuf:"varint,6,opt,name=host_port,json=hostPort,proto3" json:"host_port,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -93,6 +94,13 @@ func (x *RegisterRequest) GetCpu() int32 {
 func (x *RegisterRequest) GetMemory() int64 {
 	if x != nil {
 		return x.Memory
+	}
+	return 0
+}
+
+func (x *RegisterRequest) GetHostPort() int32 {
+	if x != nil {
+		return x.HostPort
 	}
 	return 0
 }
@@ -229,26 +237,176 @@ func (x *HeartbeatResponse) GetAcknowledged() bool {
 	return false
 }
 
+type RunServiceResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Started       bool                   `protobuf:"varint,1,opt,name=started,proto3" json:"started,omitempty"`
+	ContainerId   string                 `protobuf:"bytes,2,opt,name=container_id,json=containerId,proto3" json:"container_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RunServiceResponse) Reset() {
+	*x = RunServiceResponse{}
+	mi := &file_proto_agent_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RunServiceResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RunServiceResponse) ProtoMessage() {}
+
+func (x *RunServiceResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_agent_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RunServiceResponse.ProtoReflect.Descriptor instead.
+func (*RunServiceResponse) Descriptor() ([]byte, []int) {
+	return file_proto_agent_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *RunServiceResponse) GetStarted() bool {
+	if x != nil {
+		return x.Started
+	}
+	return false
+}
+
+func (x *RunServiceResponse) GetContainerId() string {
+	if x != nil {
+		return x.ContainerId
+	}
+	return ""
+}
+
+type RunServiceRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ServiceId     string                 `protobuf:"bytes,1,opt,name=service_id,json=serviceId,proto3" json:"service_id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Image         string                 `protobuf:"bytes,3,opt,name=image,proto3" json:"image,omitempty"`
+	Cpu           int32                  `protobuf:"varint,4,opt,name=cpu,proto3" json:"cpu,omitempty"`
+	Memory        int64                  `protobuf:"varint,5,opt,name=memory,proto3" json:"memory,omitempty"`
+	HostPort      int32                  `protobuf:"varint,6,opt,name=host_port,json=hostPort,proto3" json:"host_port,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RunServiceRequest) Reset() {
+	*x = RunServiceRequest{}
+	mi := &file_proto_agent_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RunServiceRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RunServiceRequest) ProtoMessage() {}
+
+func (x *RunServiceRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_agent_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RunServiceRequest.ProtoReflect.Descriptor instead.
+func (*RunServiceRequest) Descriptor() ([]byte, []int) {
+	return file_proto_agent_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *RunServiceRequest) GetServiceId() string {
+	if x != nil {
+		return x.ServiceId
+	}
+	return ""
+}
+
+func (x *RunServiceRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *RunServiceRequest) GetImage() string {
+	if x != nil {
+		return x.Image
+	}
+	return ""
+}
+
+func (x *RunServiceRequest) GetCpu() int32 {
+	if x != nil {
+		return x.Cpu
+	}
+	return 0
+}
+
+func (x *RunServiceRequest) GetMemory() int64 {
+	if x != nil {
+		return x.Memory
+	}
+	return 0
+}
+
+func (x *RunServiceRequest) GetHostPort() int32 {
+	if x != nil {
+		return x.HostPort
+	}
+	return 0
+}
+
 var File_proto_agent_proto protoreflect.FileDescriptor
 
 const file_proto_agent_proto_rawDesc = "" +
 	"\n" +
-	"\x11proto/agent.proto\x12\x05agent\"\x82\x01\n" +
+	"\x11proto/agent.proto\x12\x05agent\"\x9f\x01\n" +
 	"\x0fRegisterRequest\x12\x17\n" +
 	"\anode_id\x18\x01 \x01(\tR\x06nodeId\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x18\n" +
 	"\aaddress\x18\x03 \x01(\tR\aaddress\x12\x10\n" +
 	"\x03cpu\x18\x04 \x01(\x05R\x03cpu\x12\x16\n" +
-	"\x06memory\x18\x05 \x01(\x03R\x06memory\".\n" +
+	"\x06memory\x18\x05 \x01(\x03R\x06memory\x12\x1b\n" +
+	"\thost_port\x18\x06 \x01(\x05R\bhostPort\".\n" +
 	"\x10RegisterResponse\x12\x1a\n" +
 	"\baccepted\x18\x01 \x01(\bR\baccepted\"+\n" +
 	"\x10HeartbeatRequest\x12\x17\n" +
 	"\anode_id\x18\x01 \x01(\tR\x06nodeId\"7\n" +
 	"\x11HeartbeatResponse\x12\"\n" +
-	"\facknowledged\x18\x01 \x01(\bR\facknowledged2\x88\x01\n" +
+	"\facknowledged\x18\x01 \x01(\bR\facknowledged\"Q\n" +
+	"\x12RunServiceResponse\x12\x18\n" +
+	"\astarted\x18\x01 \x01(\bR\astarted\x12!\n" +
+	"\fcontainer_id\x18\x02 \x01(\tR\vcontainerId\"\xa3\x01\n" +
+	"\x11RunServiceRequest\x12\x1d\n" +
+	"\n" +
+	"service_id\x18\x01 \x01(\tR\tserviceId\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n" +
+	"\x05image\x18\x03 \x01(\tR\x05image\x12\x10\n" +
+	"\x03cpu\x18\x04 \x01(\x05R\x03cpu\x12\x16\n" +
+	"\x06memory\x18\x05 \x01(\x03R\x06memory\x12\x1b\n" +
+	"\thost_port\x18\x06 \x01(\x05R\bhostPort2\xcb\x01\n" +
 	"\tNodeAgent\x12;\n" +
 	"\bRegister\x12\x16.agent.RegisterRequest\x1a\x17.agent.RegisterResponse\x12>\n" +
-	"\tHeartbeat\x12\x17.agent.HeartbeatRequest\x1a\x18.agent.HeartbeatResponseB\x13Z\x11vortex-edge/protob\x06proto3"
+	"\tHeartbeat\x12\x17.agent.HeartbeatRequest\x1a\x18.agent.HeartbeatResponse\x12A\n" +
+	"\n" +
+	"RunService\x12\x18.agent.RunServiceRequest\x1a\x19.agent.RunServiceResponseB\x13Z\x11vortex-edge/protob\x06proto3"
 
 var (
 	file_proto_agent_proto_rawDescOnce sync.Once
@@ -262,20 +420,24 @@ func file_proto_agent_proto_rawDescGZIP() []byte {
 	return file_proto_agent_proto_rawDescData
 }
 
-var file_proto_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_proto_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_proto_agent_proto_goTypes = []any{
-	(*RegisterRequest)(nil),   // 0: agent.RegisterRequest
-	(*RegisterResponse)(nil),  // 1: agent.RegisterResponse
-	(*HeartbeatRequest)(nil),  // 2: agent.HeartbeatRequest
-	(*HeartbeatResponse)(nil), // 3: agent.HeartbeatResponse
+	(*RegisterRequest)(nil),    // 0: agent.RegisterRequest
+	(*RegisterResponse)(nil),   // 1: agent.RegisterResponse
+	(*HeartbeatRequest)(nil),   // 2: agent.HeartbeatRequest
+	(*HeartbeatResponse)(nil),  // 3: agent.HeartbeatResponse
+	(*RunServiceResponse)(nil), // 4: agent.RunServiceResponse
+	(*RunServiceRequest)(nil),  // 5: agent.RunServiceRequest
 }
 var file_proto_agent_proto_depIdxs = []int32{
 	0, // 0: agent.NodeAgent.Register:input_type -> agent.RegisterRequest
 	2, // 1: agent.NodeAgent.Heartbeat:input_type -> agent.HeartbeatRequest
-	1, // 2: agent.NodeAgent.Register:output_type -> agent.RegisterResponse
-	3, // 3: agent.NodeAgent.Heartbeat:output_type -> agent.HeartbeatResponse
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	5, // 2: agent.NodeAgent.RunService:input_type -> agent.RunServiceRequest
+	1, // 3: agent.NodeAgent.Register:output_type -> agent.RegisterResponse
+	3, // 4: agent.NodeAgent.Heartbeat:output_type -> agent.HeartbeatResponse
+	4, // 5: agent.NodeAgent.RunService:output_type -> agent.RunServiceResponse
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -292,7 +454,7 @@ func file_proto_agent_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_agent_proto_rawDesc), len(file_proto_agent_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

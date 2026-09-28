@@ -52,3 +52,33 @@ func (a *Agent) StartHeartbeat(client *Client, interval time.Duration) {
 		}
 	}
 }
+
+func(a *Agent)RunService(ctx context.Context, req*proto.RunServiceRequest,)(*proto.RunServiceResponse, error){
+		service := &models.Service{
+		ID:        req.ServiceId,
+		Name:      req.Name,
+		Image:     req.Image,
+		CPU:       int(req.Cpu),
+		Memory:    req.Memory,
+		HostPort:  int(req.HostPort),
+		Status:    models.Deploying,
+	}
+
+	err := a.runtime.Run(service)
+	if err != nil {
+		return &proto.RunServiceResponse{
+			Started: false,
+		}, err
+	}
+
+	return &proto.RunServiceResponse{
+		Started: true,
+	}, nil
+}
+
+
+// gRPC request
+//       ↓
+// models.Service
+//       ↓
+// runtime.Run(service)

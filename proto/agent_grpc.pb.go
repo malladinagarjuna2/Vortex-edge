@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	NodeAgent_Register_FullMethodName  = "/agent.NodeAgent/Register"
-	NodeAgent_Heartbeat_FullMethodName = "/agent.NodeAgent/Heartbeat"
+	NodeAgent_Register_FullMethodName   = "/agent.NodeAgent/Register"
+	NodeAgent_Heartbeat_FullMethodName  = "/agent.NodeAgent/Heartbeat"
+	NodeAgent_RunService_FullMethodName = "/agent.NodeAgent/RunService"
 )
 
 // NodeAgentClient is the client API for NodeAgent service.
@@ -29,6 +30,7 @@ const (
 type NodeAgentClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	Heartbeat(ctx context.Context, in *HeartbeatRequest, opts ...grpc.CallOption) (*HeartbeatResponse, error)
+	RunService(ctx context.Context, in *RunServiceRequest, opts ...grpc.CallOption) (*RunServiceResponse, error)
 }
 
 type nodeAgentClient struct {
@@ -59,12 +61,23 @@ func (c *nodeAgentClient) Heartbeat(ctx context.Context, in *HeartbeatRequest, o
 	return out, nil
 }
 
+func (c *nodeAgentClient) RunService(ctx context.Context, in *RunServiceRequest, opts ...grpc.CallOption) (*RunServiceResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RunServiceResponse)
+	err := c.cc.Invoke(ctx, NodeAgent_RunService_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // NodeAgentServer is the server API for NodeAgent service.
 // All implementations must embed UnimplementedNodeAgentServer
 // for forward compatibility.
 type NodeAgentServer interface {
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	Heartbeat(context.Context, *HeartbeatRequest) (*HeartbeatResponse, error)
+	RunService(context.Context, *RunServiceRequest) (*RunServiceResponse, error)
 	mustEmbedUnimplementedNodeAgentServer()
 }
 
@@ -80,6 +93,9 @@ func (UnimplementedNodeAgentServer) Register(context.Context, *RegisterRequest) 
 }
 func (UnimplementedNodeAgentServer) Heartbeat(context.Context, *HeartbeatRequest) (*HeartbeatResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Heartbeat not implemented")
+}
+func (UnimplementedNodeAgentServer) RunService(context.Context, *RunServiceRequest) (*RunServiceResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RunService not implemented")
 }
 func (UnimplementedNodeAgentServer) mustEmbedUnimplementedNodeAgentServer() {}
 func (UnimplementedNodeAgentServer) testEmbeddedByValue()                   {}
@@ -138,6 +154,24 @@ func _NodeAgent_Heartbeat_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _NodeAgent_RunService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RunServiceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NodeAgentServer).RunService(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: NodeAgent_RunService_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NodeAgentServer).RunService(ctx, req.(*RunServiceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // NodeAgent_ServiceDesc is the grpc.ServiceDesc for NodeAgent service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -152,6 +186,10 @@ var NodeAgent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Heartbeat",
 			Handler:    _NodeAgent_Heartbeat_Handler,
+		},
+		{
+			MethodName: "RunService",
+			Handler:    _NodeAgent_RunService_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

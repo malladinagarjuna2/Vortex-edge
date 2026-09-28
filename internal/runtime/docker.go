@@ -1,3 +1,23 @@
+            //  Deploy Service
+            //        │
+            //        ▼
+            //  ┌───────────┐
+            //  │ Scheduler │
+            //  └─────┬─────┘
+            //        │
+            //  node-02 selected
+            //        │
+            //        ▼
+            //  gRPC Client
+            //        │
+            //        ▼
+            //  Node Agent
+            //        │
+            //        ▼
+            //  DockerRuntime
+            //        │
+            //        ▼
+            //  Docker Container
 package runtime
 
 import (

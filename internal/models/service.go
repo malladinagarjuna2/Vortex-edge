@@ -16,9 +16,22 @@ type Service struct {
 	Image       string
 	ContainerID string
 	HostPort    int
-
+    CPU    int
+	Memory int64
+    NodeID string
 	Status ServiceStatus
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
+// Service
+//  ├── CPU = 2
+//  ├── Memory = 1GB
+//  │
+//  ↓
+// Scheduler
+//  │
+//  ↓
+// Node-02
+//  │
+//  └── service.NodeID = "node-02"
