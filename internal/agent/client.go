@@ -9,12 +9,14 @@ import (
 	"vortex-edge/internal/models"
 	"vortex-edge/proto"
 )
-//client architecture grpc server ke thru baat cheet krega
+
+// Client communicates with a Node Agent through gRPC.
 type Client struct {
 	conn   *grpc.ClientConn
 	client proto.NodeAgentClient
 }
-// naya client banane ke liye grpc server ek naya client register
+
+// NewClient creates a new gRPC client.
 func NewClient(address string) (*Client, error) {
 	conn, err := grpc.NewClient(
 		address,
@@ -46,9 +48,6 @@ func (c *Client) Heartbeat(nodeID string) (bool, error) {
 	return response.Acknowledged, nil
 }
 
-func (c *Client) Close() error {
-	return c.conn.Close()
-}
 func (c *Client) Register(node *models.Node) (bool, error) {
 	ctx := context.Background()
 
@@ -67,4 +66,17 @@ func (c *Client) Register(node *models.Node) (bool, error) {
 	}
 
 	return response.Accepted, nil
+}
+
+func (c *Client) RunService(
+	req *proto.RunServiceRequest,
+) (*proto.RunServiceResponse, error) {
+
+	ctx := context.Background()
+
+	return c.client.RunService(ctx, req)
+}
+
+func (c *Client) Close() error {
+	return c.conn.Close()
 }

@@ -73,6 +73,7 @@ func(a *Agent)RunService(ctx context.Context, req*proto.RunServiceRequest,)(*pro
 
 	return &proto.RunServiceResponse{
 		Started: true,
+		   ContainerId: service.ContainerID,
 	}, nil
 }
 

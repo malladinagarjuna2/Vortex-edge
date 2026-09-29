@@ -3,9 +3,10 @@ package agent
 
 import (
 	"testing"  //which package?
-	
+	"context"
 	"vortex-edge/internal/runtime"
 	"vortex-edge/internal/models"
+"vortex-edge/proto"
 )
 
 
@@ -32,6 +33,47 @@ func TestNewAgent(t *testing.T){
 	if agent.Node().ID != "node-01" {
 		t.Fatalf("expected node-01, got %s", agent.Node().ID)
 	}
+	
+}
+//we need to add an agent deployment test  
+func TestRunService(t*testing.T){
+	 node:= &models.Node{
+		ID:      "node-01",
+		Name:    "worker-01",
+		Status:  models.NodeReady,
+		CPU:     4,
+		Memory:  8 * 1024 * 1024 * 1024,
+	 }
+	 dockerRuntime, err:= runtime.NewDockerRuntime()
+	 	if err != nil {
+		t.Fatalf("failed to create docker runtime: %v", err)
+	}
+	agent := NewAgent(node, dockerRuntime)
+
+	response, err := agent.RunService(
+		context.Background(),
+		&proto.RunServiceRequest{
+			ServiceId: "service-01",
+			Name:      "vortex-test",
+			Image:     "hello-world",
+			Cpu:       1,
+			Memory:    256 * 1024 * 1024,
+		},
+	)
+
+	if err != nil {
+		t.Fatalf("failed to run service: %v", err)
+	}
+
+	if !response.Started {
+		t.Fatal("expected service to start")
+	}
+
+	if response.ContainerId == "" {
+		t.Fatal("expected container ID")
+	}
+
+	t.Logf("Container started: %s", response.ContainerId)
 	
 }
 
