@@ -8,6 +8,7 @@ const (
 	Stopped  ServiceStatus = "stopped"
 	Failed   ServiceStatus = "failed"
 	Deleting ServiceStatus = "deleting"
+
 )
 
 type Service struct {
