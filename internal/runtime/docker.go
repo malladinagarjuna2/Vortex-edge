@@ -111,6 +111,18 @@ if err!= nil {
 
 func (d *DockerRuntime) Stop(service *models.Service) error {
 	// TODO: Stop Docker container
+	ctx:= context.Background()
+	_, err := d.client.ContainerStop(
+		ctx,
+		service.ContainerID,
+		client.ContainerStopOptions{},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	service.Status = models.Stopped
 	return nil
 }
 
