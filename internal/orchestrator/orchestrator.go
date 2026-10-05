@@ -99,3 +99,35 @@ node, err := o.clusterState.NodeByID(service.NodeID)
     return nil
 
 }
+
+func (o *Orchestrator) Logs(service *models.Service) (string, error) {
+    node, err := o.clusterState.NodeByID(service.NodeID)
+    if err != nil {
+        return "", err
+    }
+
+    if node == nil {
+        return "", fmt.Errorf(
+            "node %s not found",
+            service.NodeID,
+        )
+    }
+
+    client, err := agent.NewClient(node.Address)
+    if err != nil {
+        return "", err
+    }
+    defer client.Close()
+
+    response, err := client.Logs(
+        &proto.LogsRequest{
+            ServiceId:   service.ID,
+            ContainerId: service.ContainerID,
+        },
+    )
+    if err != nil {
+        return "", err
+    }
+
+    return response.Logs, nil
+}

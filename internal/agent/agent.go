@@ -118,3 +118,25 @@ func(a *Agent)RunService(ctx context.Context, req*proto.RunServiceRequest,)(*pro
 // models.Service
 //       ↓
 // runtime.Run(service)
+
+func (a *Agent) Logs(
+    ctx context.Context,
+    req *proto.LogsRequest,
+) (*proto.LogsResponse, error) {
+
+    service := &models.Service{
+        ID:          req.ServiceId,
+        ContainerID: req.ContainerId,
+    }
+
+    logs, err := a.runtime.Logs(service)
+    if err != nil {
+        return &proto.LogsResponse{
+            Logs: "",
+        }, err
+    }
+
+    return &proto.LogsResponse{
+        Logs: logs,
+    }, nil
+}

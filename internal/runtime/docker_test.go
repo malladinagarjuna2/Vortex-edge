@@ -54,3 +54,36 @@ func TestDockerStop(t *testing.T) {
 		service.ContainerID,
 	)
 }
+
+func TestDockerLogs(t *testing.T) {
+    runtime, err := NewDockerRuntime()
+    if err != nil {
+        t.Fatalf("failed to create runtime: %v", err)
+    }
+
+    service := &models.Service{
+        ID:   "logs-test",
+        Name: "vortex-logs-test",
+        Image: "hello-world",
+    }
+
+    err = runtime.Run(service)
+    if err != nil {
+        t.Fatalf("failed to run container: %v", err)
+    }
+
+    t.Cleanup(func() {
+        _ = runtime.Delete(service)
+    })
+
+    logs, err := runtime.Logs(service)
+    if err != nil {
+        t.Fatalf("failed to get logs: %v", err)
+    }
+
+    if logs == "" {
+        t.Fatal("expected container logs, got empty string")
+    }
+
+    t.Logf("Container logs:\n%s", logs)
+}

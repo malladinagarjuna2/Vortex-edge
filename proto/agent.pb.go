@@ -565,6 +565,102 @@ func (x *DeleteServiceResponse) GetDeleted() bool {
 	return false
 }
 
+type LogsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ServiceId     string                 `protobuf:"bytes,1,opt,name=service_id,json=serviceId,proto3" json:"service_id,omitempty"`
+	ContainerId   string                 `protobuf:"bytes,2,opt,name=container_id,json=containerId,proto3" json:"container_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LogsRequest) Reset() {
+	*x = LogsRequest{}
+	mi := &file_proto_agent_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LogsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LogsRequest) ProtoMessage() {}
+
+func (x *LogsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_agent_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LogsRequest.ProtoReflect.Descriptor instead.
+func (*LogsRequest) Descriptor() ([]byte, []int) {
+	return file_proto_agent_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *LogsRequest) GetServiceId() string {
+	if x != nil {
+		return x.ServiceId
+	}
+	return ""
+}
+
+func (x *LogsRequest) GetContainerId() string {
+	if x != nil {
+		return x.ContainerId
+	}
+	return ""
+}
+
+type LogsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Logs          string                 `protobuf:"bytes,1,opt,name=logs,proto3" json:"logs,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LogsResponse) Reset() {
+	*x = LogsResponse{}
+	mi := &file_proto_agent_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LogsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LogsResponse) ProtoMessage() {}
+
+func (x *LogsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_agent_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LogsResponse.ProtoReflect.Descriptor instead.
+func (*LogsResponse) Descriptor() ([]byte, []int) {
+	return file_proto_agent_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *LogsResponse) GetLogs() string {
+	if x != nil {
+		return x.Logs
+	}
+	return ""
+}
+
 var File_proto_agent_proto protoreflect.FileDescriptor
 
 const file_proto_agent_proto_rawDesc = "" +
@@ -605,14 +701,21 @@ const file_proto_agent_proto_rawDesc = "" +
 	"service_id\x18\x01 \x01(\tR\tserviceId\x12!\n" +
 	"\fcontainer_id\x18\x02 \x01(\tR\vcontainerId\"1\n" +
 	"\x15DeleteServiceResponse\x12\x18\n" +
-	"\adeleted\x18\x01 \x01(\bR\adeleted2\xdd\x02\n" +
+	"\adeleted\x18\x01 \x01(\bR\adeleted\"O\n" +
+	"\vLogsRequest\x12\x1d\n" +
+	"\n" +
+	"service_id\x18\x01 \x01(\tR\tserviceId\x12!\n" +
+	"\fcontainer_id\x18\x02 \x01(\tR\vcontainerId\"\"\n" +
+	"\fLogsResponse\x12\x12\n" +
+	"\x04logs\x18\x01 \x01(\tR\x04logs2\x8e\x03\n" +
 	"\tNodeAgent\x12;\n" +
 	"\bRegister\x12\x16.agent.RegisterRequest\x1a\x17.agent.RegisterResponse\x12>\n" +
 	"\tHeartbeat\x12\x17.agent.HeartbeatRequest\x1a\x18.agent.HeartbeatResponse\x12A\n" +
 	"\n" +
 	"RunService\x12\x18.agent.RunServiceRequest\x1a\x19.agent.RunServiceResponse\x12D\n" +
 	"\vStopService\x12\x19.agent.StopServiceRequest\x1a\x1a.agent.StopServiceResponse\x12J\n" +
-	"\rDeleteService\x12\x1b.agent.DeleteServiceRequest\x1a\x1c.agent.DeleteServiceResponseB\x13Z\x11vortex-edge/protob\x06proto3"
+	"\rDeleteService\x12\x1b.agent.DeleteServiceRequest\x1a\x1c.agent.DeleteServiceResponse\x12/\n" +
+	"\x04Logs\x12\x12.agent.LogsRequest\x1a\x13.agent.LogsResponseB\x13Z\x11vortex-edge/protob\x06proto3"
 
 var (
 	file_proto_agent_proto_rawDescOnce sync.Once
@@ -626,7 +729,7 @@ func file_proto_agent_proto_rawDescGZIP() []byte {
 	return file_proto_agent_proto_rawDescData
 }
 
-var file_proto_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_proto_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_proto_agent_proto_goTypes = []any{
 	(*RegisterRequest)(nil),       // 0: agent.RegisterRequest
 	(*RegisterResponse)(nil),      // 1: agent.RegisterResponse
@@ -638,23 +741,27 @@ var file_proto_agent_proto_goTypes = []any{
 	(*StopServiceResponse)(nil),   // 7: agent.StopServiceResponse
 	(*DeleteServiceRequest)(nil),  // 8: agent.DeleteServiceRequest
 	(*DeleteServiceResponse)(nil), // 9: agent.DeleteServiceResponse
+	(*LogsRequest)(nil),           // 10: agent.LogsRequest
+	(*LogsResponse)(nil),          // 11: agent.LogsResponse
 }
 var file_proto_agent_proto_depIdxs = []int32{
-	0, // 0: agent.NodeAgent.Register:input_type -> agent.RegisterRequest
-	2, // 1: agent.NodeAgent.Heartbeat:input_type -> agent.HeartbeatRequest
-	5, // 2: agent.NodeAgent.RunService:input_type -> agent.RunServiceRequest
-	6, // 3: agent.NodeAgent.StopService:input_type -> agent.StopServiceRequest
-	8, // 4: agent.NodeAgent.DeleteService:input_type -> agent.DeleteServiceRequest
-	1, // 5: agent.NodeAgent.Register:output_type -> agent.RegisterResponse
-	3, // 6: agent.NodeAgent.Heartbeat:output_type -> agent.HeartbeatResponse
-	4, // 7: agent.NodeAgent.RunService:output_type -> agent.RunServiceResponse
-	7, // 8: agent.NodeAgent.StopService:output_type -> agent.StopServiceResponse
-	9, // 9: agent.NodeAgent.DeleteService:output_type -> agent.DeleteServiceResponse
-	5, // [5:10] is the sub-list for method output_type
-	0, // [0:5] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0,  // 0: agent.NodeAgent.Register:input_type -> agent.RegisterRequest
+	2,  // 1: agent.NodeAgent.Heartbeat:input_type -> agent.HeartbeatRequest
+	5,  // 2: agent.NodeAgent.RunService:input_type -> agent.RunServiceRequest
+	6,  // 3: agent.NodeAgent.StopService:input_type -> agent.StopServiceRequest
+	8,  // 4: agent.NodeAgent.DeleteService:input_type -> agent.DeleteServiceRequest
+	10, // 5: agent.NodeAgent.Logs:input_type -> agent.LogsRequest
+	1,  // 6: agent.NodeAgent.Register:output_type -> agent.RegisterResponse
+	3,  // 7: agent.NodeAgent.Heartbeat:output_type -> agent.HeartbeatResponse
+	4,  // 8: agent.NodeAgent.RunService:output_type -> agent.RunServiceResponse
+	7,  // 9: agent.NodeAgent.StopService:output_type -> agent.StopServiceResponse
+	9,  // 10: agent.NodeAgent.DeleteService:output_type -> agent.DeleteServiceResponse
+	11, // 11: agent.NodeAgent.Logs:output_type -> agent.LogsResponse
+	6,  // [6:12] is the sub-list for method output_type
+	0,  // [0:6] is the sub-list for method input_type
+	0,  // [0:0] is the sub-list for extension type_name
+	0,  // [0:0] is the sub-list for extension extendee
+	0,  // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_proto_agent_proto_init() }
@@ -668,7 +775,7 @@ func file_proto_agent_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_agent_proto_rawDesc), len(file_proto_agent_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

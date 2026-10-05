@@ -147,7 +147,39 @@ func (d *DockerRuntime) Delete(service *models.Service) error {
 
 func (d *DockerRuntime) Logs(service *models.Service) (string, error) {
 	// TODO: Fetch Docker logs
-	return "", nil
+	 ctx := context.Background()
+
+    response, err := d.client.ContainerLogs(
+        ctx,
+        service.ContainerID,
+        client.ContainerLogsOptions{
+            ShowStdout: true,
+            ShowStderr: true,
+        },
+    )
+    if err != nil {
+        return "", err
+    }
+    defer response.Close()
+
+    logs, err := io.ReadAll(response)
+    if err != nil {
+        return "", err
+    }
+
+    return string(logs), nil
+
+// 	service.ContainerID
+//        ↓
+// ContainerLogs()
+//        ↓
+// Docker
+//        ↓
+// stdout + stderr
+//        ↓
+// io.ReadAll()
+//        ↓
+// string
 }
 
 // Ping verifies that the Docker daemon is reachable.

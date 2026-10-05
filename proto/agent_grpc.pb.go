@@ -24,6 +24,7 @@ const (
 	NodeAgent_RunService_FullMethodName    = "/agent.NodeAgent/RunService"
 	NodeAgent_StopService_FullMethodName   = "/agent.NodeAgent/StopService"
 	NodeAgent_DeleteService_FullMethodName = "/agent.NodeAgent/DeleteService"
+	NodeAgent_Logs_FullMethodName          = "/agent.NodeAgent/Logs"
 )
 
 // NodeAgentClient is the client API for NodeAgent service.
@@ -35,6 +36,7 @@ type NodeAgentClient interface {
 	RunService(ctx context.Context, in *RunServiceRequest, opts ...grpc.CallOption) (*RunServiceResponse, error)
 	StopService(ctx context.Context, in *StopServiceRequest, opts ...grpc.CallOption) (*StopServiceResponse, error)
 	DeleteService(ctx context.Context, in *DeleteServiceRequest, opts ...grpc.CallOption) (*DeleteServiceResponse, error)
+	Logs(ctx context.Context, in *LogsRequest, opts ...grpc.CallOption) (*LogsResponse, error)
 }
 
 type nodeAgentClient struct {
@@ -95,6 +97,16 @@ func (c *nodeAgentClient) DeleteService(ctx context.Context, in *DeleteServiceRe
 	return out, nil
 }
 
+func (c *nodeAgentClient) Logs(ctx context.Context, in *LogsRequest, opts ...grpc.CallOption) (*LogsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(LogsResponse)
+	err := c.cc.Invoke(ctx, NodeAgent_Logs_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // NodeAgentServer is the server API for NodeAgent service.
 // All implementations must embed UnimplementedNodeAgentServer
 // for forward compatibility.
@@ -104,6 +116,7 @@ type NodeAgentServer interface {
 	RunService(context.Context, *RunServiceRequest) (*RunServiceResponse, error)
 	StopService(context.Context, *StopServiceRequest) (*StopServiceResponse, error)
 	DeleteService(context.Context, *DeleteServiceRequest) (*DeleteServiceResponse, error)
+	Logs(context.Context, *LogsRequest) (*LogsResponse, error)
 	mustEmbedUnimplementedNodeAgentServer()
 }
 
@@ -128,6 +141,9 @@ func (UnimplementedNodeAgentServer) StopService(context.Context, *StopServiceReq
 }
 func (UnimplementedNodeAgentServer) DeleteService(context.Context, *DeleteServiceRequest) (*DeleteServiceResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteService not implemented")
+}
+func (UnimplementedNodeAgentServer) Logs(context.Context, *LogsRequest) (*LogsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Logs not implemented")
 }
 func (UnimplementedNodeAgentServer) mustEmbedUnimplementedNodeAgentServer() {}
 func (UnimplementedNodeAgentServer) testEmbeddedByValue()                   {}
@@ -240,6 +256,24 @@ func _NodeAgent_DeleteService_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _NodeAgent_Logs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LogsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NodeAgentServer).Logs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: NodeAgent_Logs_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NodeAgentServer).Logs(ctx, req.(*LogsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // NodeAgent_ServiceDesc is the grpc.ServiceDesc for NodeAgent service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -266,6 +300,10 @@ var NodeAgent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteService",
 			Handler:    _NodeAgent_DeleteService_Handler,
+		},
+		{
+			MethodName: "Logs",
+			Handler:    _NodeAgent_Logs_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

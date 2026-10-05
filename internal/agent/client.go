@@ -85,3 +85,11 @@ func (c*Client)DeleteService( req*proto.DeleteServiceRequest,)(*proto.DeleteServ
 	 ctx:= context.Background()
 	 return c.client.DeleteService(ctx,req)
 }
+
+func (c *Client) Logs(
+    req *proto.LogsRequest,
+) (*proto.LogsResponse, error) {
+    ctx := context.Background()
+
+    return c.client.Logs(ctx, req)
+}
