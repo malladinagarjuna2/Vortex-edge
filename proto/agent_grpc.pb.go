@@ -19,10 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	NodeAgent_Register_FullMethodName    = "/agent.NodeAgent/Register"
-	NodeAgent_Heartbeat_FullMethodName   = "/agent.NodeAgent/Heartbeat"
-	NodeAgent_RunService_FullMethodName  = "/agent.NodeAgent/RunService"
-	NodeAgent_StopService_FullMethodName = "/agent.NodeAgent/StopService"
+	NodeAgent_Register_FullMethodName      = "/agent.NodeAgent/Register"
+	NodeAgent_Heartbeat_FullMethodName     = "/agent.NodeAgent/Heartbeat"
+	NodeAgent_RunService_FullMethodName    = "/agent.NodeAgent/RunService"
+	NodeAgent_StopService_FullMethodName   = "/agent.NodeAgent/StopService"
+	NodeAgent_DeleteService_FullMethodName = "/agent.NodeAgent/DeleteService"
 )
 
 // NodeAgentClient is the client API for NodeAgent service.
@@ -33,6 +34,7 @@ type NodeAgentClient interface {
 	Heartbeat(ctx context.Context, in *HeartbeatRequest, opts ...grpc.CallOption) (*HeartbeatResponse, error)
 	RunService(ctx context.Context, in *RunServiceRequest, opts ...grpc.CallOption) (*RunServiceResponse, error)
 	StopService(ctx context.Context, in *StopServiceRequest, opts ...grpc.CallOption) (*StopServiceResponse, error)
+	DeleteService(ctx context.Context, in *DeleteServiceRequest, opts ...grpc.CallOption) (*DeleteServiceResponse, error)
 }
 
 type nodeAgentClient struct {
@@ -83,6 +85,16 @@ func (c *nodeAgentClient) StopService(ctx context.Context, in *StopServiceReques
 	return out, nil
 }
 
+func (c *nodeAgentClient) DeleteService(ctx context.Context, in *DeleteServiceRequest, opts ...grpc.CallOption) (*DeleteServiceResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteServiceResponse)
+	err := c.cc.Invoke(ctx, NodeAgent_DeleteService_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // NodeAgentServer is the server API for NodeAgent service.
 // All implementations must embed UnimplementedNodeAgentServer
 // for forward compatibility.
@@ -91,6 +103,7 @@ type NodeAgentServer interface {
 	Heartbeat(context.Context, *HeartbeatRequest) (*HeartbeatResponse, error)
 	RunService(context.Context, *RunServiceRequest) (*RunServiceResponse, error)
 	StopService(context.Context, *StopServiceRequest) (*StopServiceResponse, error)
+	DeleteService(context.Context, *DeleteServiceRequest) (*DeleteServiceResponse, error)
 	mustEmbedUnimplementedNodeAgentServer()
 }
 
@@ -112,6 +125,9 @@ func (UnimplementedNodeAgentServer) RunService(context.Context, *RunServiceReque
 }
 func (UnimplementedNodeAgentServer) StopService(context.Context, *StopServiceRequest) (*StopServiceResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method StopService not implemented")
+}
+func (UnimplementedNodeAgentServer) DeleteService(context.Context, *DeleteServiceRequest) (*DeleteServiceResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteService not implemented")
 }
 func (UnimplementedNodeAgentServer) mustEmbedUnimplementedNodeAgentServer() {}
 func (UnimplementedNodeAgentServer) testEmbeddedByValue()                   {}
@@ -206,6 +222,24 @@ func _NodeAgent_StopService_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _NodeAgent_DeleteService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteServiceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NodeAgentServer).DeleteService(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: NodeAgent_DeleteService_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NodeAgentServer).DeleteService(ctx, req.(*DeleteServiceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // NodeAgent_ServiceDesc is the grpc.ServiceDesc for NodeAgent service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -228,6 +262,10 @@ var NodeAgent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "StopService",
 			Handler:    _NodeAgent_StopService_Handler,
+		},
+		{
+			MethodName: "DeleteService",
+			Handler:    _NodeAgent_DeleteService_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

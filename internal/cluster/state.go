@@ -54,6 +54,9 @@ func (c *ClusterState) Nodes() []*models.Node {
 	return c.registry.List()
 }
 
+func (c *ClusterState) NodeByID(id string) (*models.Node, error) {
+    return c.registry.Get(id)
+}
 func (c *ClusterState) ReadyNodes() []*models.Node {
 	nodes := c.registry.List()
 

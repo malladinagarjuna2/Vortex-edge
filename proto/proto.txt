@@ -35,3 +35,20 @@ Version Compatibility: Requires careful maintenance to ensure compatibility betw
 1
 
 Understanding these pros and cons can help you choose the right serialization and deserialization method for your Java application, balancing the need for data persistence and transfer with the potential performance and security risks.
+
+
+
+//DeleteServiceRequest
+        ↓
+service_id
+container_id
+        ↓
+Node Agent
+        ↓
+DockerRuntime.Delete()
+        ↓
+ContainerRemove()
+        ↓
+DeleteServiceResponse
+        ↓
+deleted: true

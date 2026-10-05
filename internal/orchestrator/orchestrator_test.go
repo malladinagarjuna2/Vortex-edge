@@ -81,7 +81,10 @@ func TestDeploy(t *testing.T) {
 	)
 
 	// Orchestrator
-	o := NewOrchestrator(s)
+	o := NewOrchestrator(
+		s,
+		clusterState,
+	)
 
 	// Service
 	service := &models.Service{
@@ -97,7 +100,6 @@ func TestDeploy(t *testing.T) {
 	if err != nil {
 		t.Fatalf("deployment failed: %v", err)
 	}
-
 	// Verify selected node
 	if service.NodeID != node.ID {
 		t.Fatalf(
@@ -125,4 +127,17 @@ func TestDeploy(t *testing.T) {
 		service.NodeID,
 		service.ContainerID,
 	)
+
+	// Delete
+	err = o.Delete(service)
+	if err != nil {
+		t.Fatalf("deletion failed: %v", err)
+	}
+
+	if service.ContainerID != "" {
+		t.Fatal("expected container ID to be empty after deletion")
+	}
+	if service.Status != models.Stopped {
+    t.Fatalf("expected service status to be Stopped, got %s", service.Status)
+}
 }

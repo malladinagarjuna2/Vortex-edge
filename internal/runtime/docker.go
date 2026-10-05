@@ -128,6 +128,20 @@ func (d *DockerRuntime) Stop(service *models.Service) error {
 
 func (d *DockerRuntime) Delete(service *models.Service) error {
 	// TODO: Remove Docker container
+
+	 ctx :=context.Background()
+ _, err := d.client.ContainerRemove(
+	ctx,
+	service.ContainerID,
+	client.ContainerRemoveOptions{},)
+	if err !=nil{
+		 return err
+	}
+	     service.ContainerID = ""
+    service.Status = models.Stopped
+
+ 
+
 	return nil
 }
 

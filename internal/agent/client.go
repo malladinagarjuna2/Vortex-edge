@@ -80,3 +80,8 @@ func (c *Client) RunService(
 func (c *Client) Close() error {
 	return c.conn.Close()
 }
+
+func (c*Client)DeleteService( req*proto.DeleteServiceRequest,)(*proto.DeleteServiceResponse, error){
+	 ctx:= context.Background()
+	 return c.client.DeleteService(ctx,req)
+}

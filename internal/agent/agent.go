@@ -33,6 +33,41 @@ func (a*Agent)Heartbeat(
 	}, nil
 }
 
+func (a *Agent) DeleteService(
+    ctx context.Context,
+    req *proto.DeleteServiceRequest,
+) (*proto.DeleteServiceResponse, error) {
+// 	Orchestrator
+//      ↓
+// DeleteService request
+//      ↓
+// Node Agent
+//      ↓
+// runtime.Delete()
+//      ↓
+// DockerRuntime
+//      ↓
+// ContainerRemove()
+//      ↓
+// Docker container deleted
+
+    service := &models.Service{
+        ID:          req.ServiceId,
+        ContainerID: req.ContainerId,
+        Status:      models.Stopped,
+    }
+
+    err := a.runtime.Delete(service)
+    if err != nil {
+        return &proto.DeleteServiceResponse{
+            Deleted: false,
+        }, err
+    }
+
+    return &proto.DeleteServiceResponse{
+        Deleted: true,
+    }, nil
+}
 func (a *Agent) StartHeartbeat(client *Client, interval time.Duration) {
 	ticker := time.NewTicker(interval)
 	defer ticker.Stop()

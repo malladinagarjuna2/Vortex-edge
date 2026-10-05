@@ -469,6 +469,102 @@ func (x *StopServiceResponse) GetStopped() bool {
 	return false
 }
 
+type DeleteServiceRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ServiceId     string                 `protobuf:"bytes,1,opt,name=service_id,json=serviceId,proto3" json:"service_id,omitempty"`
+	ContainerId   string                 `protobuf:"bytes,2,opt,name=container_id,json=containerId,proto3" json:"container_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteServiceRequest) Reset() {
+	*x = DeleteServiceRequest{}
+	mi := &file_proto_agent_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteServiceRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteServiceRequest) ProtoMessage() {}
+
+func (x *DeleteServiceRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_agent_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteServiceRequest.ProtoReflect.Descriptor instead.
+func (*DeleteServiceRequest) Descriptor() ([]byte, []int) {
+	return file_proto_agent_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *DeleteServiceRequest) GetServiceId() string {
+	if x != nil {
+		return x.ServiceId
+	}
+	return ""
+}
+
+func (x *DeleteServiceRequest) GetContainerId() string {
+	if x != nil {
+		return x.ContainerId
+	}
+	return ""
+}
+
+type DeleteServiceResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Deleted       bool                   `protobuf:"varint,1,opt,name=deleted,proto3" json:"deleted,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteServiceResponse) Reset() {
+	*x = DeleteServiceResponse{}
+	mi := &file_proto_agent_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteServiceResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteServiceResponse) ProtoMessage() {}
+
+func (x *DeleteServiceResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_agent_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteServiceResponse.ProtoReflect.Descriptor instead.
+func (*DeleteServiceResponse) Descriptor() ([]byte, []int) {
+	return file_proto_agent_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *DeleteServiceResponse) GetDeleted() bool {
+	if x != nil {
+		return x.Deleted
+	}
+	return false
+}
+
 var File_proto_agent_proto protoreflect.FileDescriptor
 
 const file_proto_agent_proto_rawDesc = "" +
@@ -503,13 +599,20 @@ const file_proto_agent_proto_rawDesc = "" +
 	"service_id\x18\x01 \x01(\tR\tserviceId\x12!\n" +
 	"\fcontainer_id\x18\x02 \x01(\tR\vcontainerId\"/\n" +
 	"\x13StopServiceResponse\x12\x18\n" +
-	"\astopped\x18\x01 \x01(\bR\astopped2\x91\x02\n" +
+	"\astopped\x18\x01 \x01(\bR\astopped\"X\n" +
+	"\x14DeleteServiceRequest\x12\x1d\n" +
+	"\n" +
+	"service_id\x18\x01 \x01(\tR\tserviceId\x12!\n" +
+	"\fcontainer_id\x18\x02 \x01(\tR\vcontainerId\"1\n" +
+	"\x15DeleteServiceResponse\x12\x18\n" +
+	"\adeleted\x18\x01 \x01(\bR\adeleted2\xdd\x02\n" +
 	"\tNodeAgent\x12;\n" +
 	"\bRegister\x12\x16.agent.RegisterRequest\x1a\x17.agent.RegisterResponse\x12>\n" +
 	"\tHeartbeat\x12\x17.agent.HeartbeatRequest\x1a\x18.agent.HeartbeatResponse\x12A\n" +
 	"\n" +
 	"RunService\x12\x18.agent.RunServiceRequest\x1a\x19.agent.RunServiceResponse\x12D\n" +
-	"\vStopService\x12\x19.agent.StopServiceRequest\x1a\x1a.agent.StopServiceResponseB\x13Z\x11vortex-edge/protob\x06proto3"
+	"\vStopService\x12\x19.agent.StopServiceRequest\x1a\x1a.agent.StopServiceResponse\x12J\n" +
+	"\rDeleteService\x12\x1b.agent.DeleteServiceRequest\x1a\x1c.agent.DeleteServiceResponseB\x13Z\x11vortex-edge/protob\x06proto3"
 
 var (
 	file_proto_agent_proto_rawDescOnce sync.Once
@@ -523,28 +626,32 @@ func file_proto_agent_proto_rawDescGZIP() []byte {
 	return file_proto_agent_proto_rawDescData
 }
 
-var file_proto_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_proto_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_proto_agent_proto_goTypes = []any{
-	(*RegisterRequest)(nil),     // 0: agent.RegisterRequest
-	(*RegisterResponse)(nil),    // 1: agent.RegisterResponse
-	(*HeartbeatRequest)(nil),    // 2: agent.HeartbeatRequest
-	(*HeartbeatResponse)(nil),   // 3: agent.HeartbeatResponse
-	(*RunServiceResponse)(nil),  // 4: agent.RunServiceResponse
-	(*RunServiceRequest)(nil),   // 5: agent.RunServiceRequest
-	(*StopServiceRequest)(nil),  // 6: agent.StopServiceRequest
-	(*StopServiceResponse)(nil), // 7: agent.StopServiceResponse
+	(*RegisterRequest)(nil),       // 0: agent.RegisterRequest
+	(*RegisterResponse)(nil),      // 1: agent.RegisterResponse
+	(*HeartbeatRequest)(nil),      // 2: agent.HeartbeatRequest
+	(*HeartbeatResponse)(nil),     // 3: agent.HeartbeatResponse
+	(*RunServiceResponse)(nil),    // 4: agent.RunServiceResponse
+	(*RunServiceRequest)(nil),     // 5: agent.RunServiceRequest
+	(*StopServiceRequest)(nil),    // 6: agent.StopServiceRequest
+	(*StopServiceResponse)(nil),   // 7: agent.StopServiceResponse
+	(*DeleteServiceRequest)(nil),  // 8: agent.DeleteServiceRequest
+	(*DeleteServiceResponse)(nil), // 9: agent.DeleteServiceResponse
 }
 var file_proto_agent_proto_depIdxs = []int32{
 	0, // 0: agent.NodeAgent.Register:input_type -> agent.RegisterRequest
 	2, // 1: agent.NodeAgent.Heartbeat:input_type -> agent.HeartbeatRequest
 	5, // 2: agent.NodeAgent.RunService:input_type -> agent.RunServiceRequest
 	6, // 3: agent.NodeAgent.StopService:input_type -> agent.StopServiceRequest
-	1, // 4: agent.NodeAgent.Register:output_type -> agent.RegisterResponse
-	3, // 5: agent.NodeAgent.Heartbeat:output_type -> agent.HeartbeatResponse
-	4, // 6: agent.NodeAgent.RunService:output_type -> agent.RunServiceResponse
-	7, // 7: agent.NodeAgent.StopService:output_type -> agent.StopServiceResponse
-	4, // [4:8] is the sub-list for method output_type
-	0, // [0:4] is the sub-list for method input_type
+	8, // 4: agent.NodeAgent.DeleteService:input_type -> agent.DeleteServiceRequest
+	1, // 5: agent.NodeAgent.Register:output_type -> agent.RegisterResponse
+	3, // 6: agent.NodeAgent.Heartbeat:output_type -> agent.HeartbeatResponse
+	4, // 7: agent.NodeAgent.RunService:output_type -> agent.RunServiceResponse
+	7, // 8: agent.NodeAgent.StopService:output_type -> agent.StopServiceResponse
+	9, // 9: agent.NodeAgent.DeleteService:output_type -> agent.DeleteServiceResponse
+	5, // [5:10] is the sub-list for method output_type
+	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -561,7 +668,7 @@ func file_proto_agent_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_agent_proto_rawDesc), len(file_proto_agent_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

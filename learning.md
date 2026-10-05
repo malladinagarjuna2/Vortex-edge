@@ -133,3 +133,31 @@ This is basically:
 > **Docker Engine wasn't running/ready when your test tried to connect.**
 
 And because your orchestrator test actually launches a real Docker container, **Docker Desktop/Engine needs to be running whenever you run these integration tests.**
+
+
+
+
+
+
+learning:2:
+That message does not necessarily mean your gRPC implementation is broken.
+A gRPC server normally runs in a goroutine like:
+Test
+ │
+ ├── start gRPC server
+ │       │
+ │       └── Serve()
+ │
+ └── test finishes
+
+When the listener/server gets closed, Serve() can return:
+use of closed network connection
+
+That's a normal shutdown condition.
+The suspicious part was:
+Log in goroutine after TestGRPC has completed
+
+But since you then ran the exact same code again and got:
+ok vortex-edge/internal/agent 3.086s
+
+there is no persistent failure to fix.
