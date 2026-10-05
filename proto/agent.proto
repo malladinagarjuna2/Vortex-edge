@@ -8,6 +8,7 @@ service NodeAgent {
     rpc Register(RegisterRequest) returns (RegisterResponse);
     rpc Heartbeat(HeartbeatRequest) returns (HeartbeatResponse);
     rpc RunService(RunServiceRequest) returns (RunServiceResponse);
+    rpc StopService(StopServiceRequest) returns (StopServiceResponse);
 }
 
 message RegisterRequest {
@@ -42,4 +43,12 @@ message RunServiceRequest {
     int32 cpu = 4;
     int64 memory = 5;
     int32 host_port = 6;
+}
+message StopServiceRequest {
+    string service_id = 1;
+    string container_id = 2;
+}
+
+message StopServiceResponse {
+    bool stopped = 1;
 }

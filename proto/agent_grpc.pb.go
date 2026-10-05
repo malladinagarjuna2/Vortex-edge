@@ -19,9 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	NodeAgent_Register_FullMethodName   = "/agent.NodeAgent/Register"
-	NodeAgent_Heartbeat_FullMethodName  = "/agent.NodeAgent/Heartbeat"
-	NodeAgent_RunService_FullMethodName = "/agent.NodeAgent/RunService"
+	NodeAgent_Register_FullMethodName    = "/agent.NodeAgent/Register"
+	NodeAgent_Heartbeat_FullMethodName   = "/agent.NodeAgent/Heartbeat"
+	NodeAgent_RunService_FullMethodName  = "/agent.NodeAgent/RunService"
+	NodeAgent_StopService_FullMethodName = "/agent.NodeAgent/StopService"
 )
 
 // NodeAgentClient is the client API for NodeAgent service.
@@ -31,6 +32,7 @@ type NodeAgentClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	Heartbeat(ctx context.Context, in *HeartbeatRequest, opts ...grpc.CallOption) (*HeartbeatResponse, error)
 	RunService(ctx context.Context, in *RunServiceRequest, opts ...grpc.CallOption) (*RunServiceResponse, error)
+	StopService(ctx context.Context, in *StopServiceRequest, opts ...grpc.CallOption) (*StopServiceResponse, error)
 }
 
 type nodeAgentClient struct {
@@ -71,6 +73,16 @@ func (c *nodeAgentClient) RunService(ctx context.Context, in *RunServiceRequest,
 	return out, nil
 }
 
+func (c *nodeAgentClient) StopService(ctx context.Context, in *StopServiceRequest, opts ...grpc.CallOption) (*StopServiceResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(StopServiceResponse)
+	err := c.cc.Invoke(ctx, NodeAgent_StopService_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // NodeAgentServer is the server API for NodeAgent service.
 // All implementations must embed UnimplementedNodeAgentServer
 // for forward compatibility.
@@ -78,6 +90,7 @@ type NodeAgentServer interface {
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	Heartbeat(context.Context, *HeartbeatRequest) (*HeartbeatResponse, error)
 	RunService(context.Context, *RunServiceRequest) (*RunServiceResponse, error)
+	StopService(context.Context, *StopServiceRequest) (*StopServiceResponse, error)
 	mustEmbedUnimplementedNodeAgentServer()
 }
 
@@ -96,6 +109,9 @@ func (UnimplementedNodeAgentServer) Heartbeat(context.Context, *HeartbeatRequest
 }
 func (UnimplementedNodeAgentServer) RunService(context.Context, *RunServiceRequest) (*RunServiceResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method RunService not implemented")
+}
+func (UnimplementedNodeAgentServer) StopService(context.Context, *StopServiceRequest) (*StopServiceResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method StopService not implemented")
 }
 func (UnimplementedNodeAgentServer) mustEmbedUnimplementedNodeAgentServer() {}
 func (UnimplementedNodeAgentServer) testEmbeddedByValue()                   {}
@@ -172,6 +188,24 @@ func _NodeAgent_RunService_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _NodeAgent_StopService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(StopServiceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NodeAgentServer).StopService(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: NodeAgent_StopService_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NodeAgentServer).StopService(ctx, req.(*StopServiceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // NodeAgent_ServiceDesc is the grpc.ServiceDesc for NodeAgent service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +224,10 @@ var NodeAgent_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RunService",
 			Handler:    _NodeAgent_RunService_Handler,
+		},
+		{
+			MethodName: "StopService",
+			Handler:    _NodeAgent_StopService_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
