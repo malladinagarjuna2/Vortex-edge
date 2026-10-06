@@ -26,11 +26,14 @@ func (s *Scheduler) Schedule(
 	nodes := s.clusterState.ReadyNodes()
 
 	for _, node := range nodes {
-		if node.CPU < cpuRequired {
+		availableCPU := node.CPU - node.AllocatedCPU
+		availableMemory := node.Memory - node.AllocatedMemory
+
+		if availableCPU < cpuRequired {
 			continue
 		}
 
-		if node.Memory < memoryRequired {
+		if availableMemory < memoryRequired {
 			continue
 		}
 

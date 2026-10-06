@@ -37,11 +37,19 @@
 
 package cluster
 import(
+	"fmt"
+	"sync"
+	"time"
+
 	"vortex-edge/internal/models"
 	"vortex-edge/internal/registery"
 )
 type ClusterState struct{
 	registry *registery.NodeRegistry
+
+	// mu makes check-and-allocate atomic so two deploys can't both
+	// claim the same remaining capacity.
+	mu sync.Mutex
 }
 
 func NewClusterState(registry *registery.NodeRegistry)*ClusterState{
@@ -69,4 +77,76 @@ func (c *ClusterState) ReadyNodes() []*models.Node {
 	}
 
 	return readyNodes
+}
+// AllocateResources reserves cpu/memory on a node, failing if the node
+// doesn't have enough available capacity left.
+func (c *ClusterState) AllocateResources(
+	nodeID string,
+	cpu int,
+	memory int64,
+) error {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	node, err := c.registry.Get(nodeID)
+	if err != nil {
+		return err
+	}
+
+	if node == nil {
+		return fmt.Errorf("node %s not found", nodeID)
+	}
+
+	availableCPU := node.CPU - node.AllocatedCPU
+	availableMemory := node.Memory - node.AllocatedMemory
+
+	if availableCPU < cpu {
+		return fmt.Errorf("insufficient CPU on node %s", nodeID)
+	}
+
+	if availableMemory < memory {
+		return fmt.Errorf("insufficient memory on node %s", nodeID)
+	}
+
+	node.AllocatedCPU += cpu
+	node.AllocatedMemory += memory
+
+	node.UpdatedAt = time.Now()
+
+	return c.registry.Update(node)
+}
+
+// ReleaseResources returns previously allocated cpu/memory to a node.
+func (c *ClusterState) ReleaseResources(
+	nodeID string,
+	cpu int,
+	memory int64,
+) error {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	node, err := c.registry.Get(nodeID)
+	if err != nil {
+		return err
+	}
+
+	if node == nil {
+		return fmt.Errorf("node %s not found", nodeID)
+	}
+
+	node.AllocatedCPU -= cpu
+	node.AllocatedMemory -= memory
+
+	// Defensive: never go negative.
+	if node.AllocatedCPU < 0 {
+		node.AllocatedCPU = 0
+	}
+
+	if node.AllocatedMemory < 0 {
+		node.AllocatedMemory = 0
+	}
+
+	node.UpdatedAt = time.Now()
+
+	return c.registry.Update(node)
 }

@@ -86,6 +86,14 @@ func (c*Client)DeleteService( req*proto.DeleteServiceRequest,)(*proto.DeleteServ
 	 return c.client.DeleteService(ctx,req)
 }
 
+func (c *Client) StopService(
+	req *proto.StopServiceRequest,
+) (*proto.StopServiceResponse, error) {
+	ctx := context.Background()
+
+	return c.client.StopService(ctx, req)
+}
+
 func (c *Client) Logs(
     req *proto.LogsRequest,
 ) (*proto.LogsResponse, error) {
