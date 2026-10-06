@@ -17,6 +17,10 @@ type Node struct {
 	 Status NodeStatus 
 	 CPU int
 	 Memory int64
+
+	 AllocatedCPU    int
+	 AllocatedMemory int64
+
 	 LastHeartbeat  time.Time
 	  CreatedAt time.Time
 	UpdatedAt time.Time

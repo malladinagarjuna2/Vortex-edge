@@ -68,6 +68,28 @@ func (a *Agent) DeleteService(
         Deleted: true,
     }, nil
 }
+
+func (a *Agent) StopService(
+    ctx context.Context,
+    req *proto.StopServiceRequest,
+) (*proto.StopServiceResponse, error) {
+    service := &models.Service{
+        ID:          req.ServiceId,
+        ContainerID: req.ContainerId,
+        Status:      models.Running,
+    }
+
+    err := a.runtime.Stop(service)
+    if err != nil {
+        return &proto.StopServiceResponse{
+            Stopped: false,
+        }, err
+    }
+
+    return &proto.StopServiceResponse{
+        Stopped: true,
+    }, nil
+}
 func (a *Agent) StartHeartbeat(client *Client, interval time.Duration) {
 	ticker := time.NewTicker(interval)
 	defer ticker.Stop()

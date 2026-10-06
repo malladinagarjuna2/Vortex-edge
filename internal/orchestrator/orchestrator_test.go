@@ -122,6 +122,15 @@ func TestDeploy(t *testing.T) {
 		)
 	}
 
+	// Verify resources were reserved
+	if node.AllocatedCPU != service.CPU || node.AllocatedMemory != service.Memory {
+		t.Fatalf(
+			"expected allocated %d CPU / %d memory, got %d / %d",
+			service.CPU, service.Memory,
+			node.AllocatedCPU, node.AllocatedMemory,
+		)
+	}
+
 	t.Logf(
 		"Deployment successful: node=%s container=%s",
 		service.NodeID,
@@ -140,4 +149,12 @@ func TestDeploy(t *testing.T) {
 	if service.Status != models.Stopped {
     t.Fatalf("expected service status to be Stopped, got %s", service.Status)
 }
+
+	// Verify resources were released
+	if node.AllocatedCPU != 0 || node.AllocatedMemory != 0 {
+		t.Fatalf(
+			"expected resources released, got %d CPU / %d memory",
+			node.AllocatedCPU, node.AllocatedMemory,
+		)
+	}
 }

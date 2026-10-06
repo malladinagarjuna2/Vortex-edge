@@ -22,6 +22,8 @@ type Service struct {
     NodeID string
 	Status ServiceStatus
 
+	ResourcesAllocated bool
+
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
