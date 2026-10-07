@@ -24,6 +24,10 @@ type Service struct {
 
 	ResourcesAllocated bool
 
+	// LastError records why the service last failed (e.g. rescheduling
+	// found no healthy node), so the reason isn't silently lost.
+	LastError string
+
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
