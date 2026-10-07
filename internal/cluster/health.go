@@ -22,17 +22,28 @@ func NewHealthMonitor(
 	}
 }
 
-func (h *HealthMonitor) Check() {
+// Check marks nodes whose heartbeat has timed out as Offline and returns
+// only the nodes that went Offline during this check, so the caller
+// reschedules each failed node's services exactly once.
+func (h *HealthMonitor) Check() []*models.Node {
 	nodes := h.registry.List()
 
 	now := time.Now()
+	failed := make([]*models.Node, 0)
 
 	for _, node := range nodes {
+		if node.Status == models.NodeOffline {
+			continue
+		}
+
 		if now.Sub(node.LastHeartbeat) > h.timeout {
 			node.Status = models.NodeOffline
 			node.UpdatedAt = now
 
 			_ = h.registry.Update(node)
+			failed = append(failed, node)
 		}
 	}
+
+	return failed
 }

@@ -84,6 +84,7 @@ func TestDeploy(t *testing.T) {
 	o := NewOrchestrator(
 		s,
 		clusterState,
+		registery.NewMemoryRegistery(),
 	)
 
 	// Service
