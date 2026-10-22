@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"log"
 	"net"
 	"time"
@@ -26,6 +27,9 @@ const (
 )
 
 func main() {
+	listen := flag.String("listen", "localhost:9001", "control plane gRPC address (use the Tailscale IP in a real cluster)")
+	flag.Parse()
+
 	registry := registery.NewNodeRegistry()
 	services := registery.NewMemoryRegistery()
 
@@ -45,7 +49,7 @@ func main() {
 
 	server := cluster.NewServer(registry)
 
-	listener, err := net.Listen("tcp", "localhost:9001")
+	listener, err := net.Listen("tcp", *listen)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
@@ -53,7 +57,7 @@ func main() {
 	grpcServer := grpc.NewServer()
 	proto.RegisterControlPlaneServer(grpcServer, server)
 
-	log.Println("Control plane listening on localhost:9001")
+	log.Printf("Control plane listening on %s", *listen)
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("gRPC server stopped: %v", err)
 	}
