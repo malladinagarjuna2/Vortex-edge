@@ -27,7 +27,7 @@ REST API
 * ✅ Stop container
 * ✅ Delete container
 * ✅ View logs
-* ✅ Basic REST API
+* ❌ Basic REST API (not built yet — planned for Phase 3, workstream 3.4)
 
 Architecture
 
@@ -91,13 +91,14 @@ Architecture
     Agent    Agent    Agent
 ```
 
-Features
+Features (✅ complete)
 
-* Node registration
-* Heartbeats
-* CPU/RAM monitoring
-* Scheduling
-* Deploy on best node
+* ✅ Node registration
+* ✅ Heartbeats
+* ✅ CPU/RAM accounting
+* ✅ Scheduling
+* ✅ Remote deploy over gRPC
+* ✅ Node failure detection and service rescheduling
 
 ---
 
@@ -105,10 +106,10 @@ Features
 
 Machines should communicate securely.
 
-We'll build
+We'll use
 
 ```text
-WireGuard Mesh
+Tailscale (WireGuard-based) private network
 ```
 
 Features
