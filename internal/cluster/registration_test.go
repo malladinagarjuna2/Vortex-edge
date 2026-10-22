@@ -47,7 +47,7 @@ func TestNodeRegistration(t *testing.T) {
 	grpcServer := grpc.NewServer()
 
 //ek control plane ko register kiya hai 
-	proto.RegisterNodeAgentServer(grpcServer, server)
+	proto.RegisterControlPlaneServer(grpcServer, server)
 
 //grpc server ko start kiya
 	go func() {
@@ -71,7 +71,7 @@ func TestNodeRegistration(t *testing.T) {
 	defer conn.Close()
 
 	// ek grpc client create hogaya hai 
-	client := proto.NewNodeAgentClient(conn)
+	client := proto.NewControlPlaneClient(conn)
 
 	// ek node ko register join kiya hai 
 	node := &models.Node{

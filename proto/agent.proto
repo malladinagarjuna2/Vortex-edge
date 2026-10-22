@@ -4,9 +4,17 @@ package agent;
 
 option go_package = "vortex-edge/proto";
 
-service NodeAgent {
+// ControlPlane is served by the control plane (cmd/vortex).
+// Node agents call it to join the cluster and report liveness.
+service ControlPlane {
     rpc Register(RegisterRequest) returns (RegisterResponse);
     rpc Heartbeat(HeartbeatRequest) returns (HeartbeatResponse);
+}
+
+// NodeAgent is served by every worker (cmd/agent).
+// The control plane calls it to run and manage workloads.
+service NodeAgent {
+    rpc Ping(PingRequest) returns (PingResponse);
     rpc RunService(RunServiceRequest) returns (RunServiceResponse);
     rpc StopService(StopServiceRequest) returns (StopServiceResponse);
     rpc DeleteService(DeleteServiceRequest) returns (DeleteServiceResponse);
@@ -34,6 +42,14 @@ message HeartbeatRequest {
 message HeartbeatResponse {
     bool acknowledged = 1;
 }
+// Ping lets the control plane check that an endpoint is reachable
+// AND that it is the node it expects (identity != address).
+message PingRequest {}
+
+message PingResponse {
+    string node_id = 1;
+}
+
 message RunServiceResponse {
     bool started = 1;
     string container_id = 2;

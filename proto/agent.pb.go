@@ -237,6 +237,88 @@ func (x *HeartbeatResponse) GetAcknowledged() bool {
 	return false
 }
 
+// Ping lets the control plane check that an endpoint is reachable
+// AND that it is the node it expects (identity != address).
+type PingRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PingRequest) Reset() {
+	*x = PingRequest{}
+	mi := &file_proto_agent_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PingRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PingRequest) ProtoMessage() {}
+
+func (x *PingRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_agent_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PingRequest.ProtoReflect.Descriptor instead.
+func (*PingRequest) Descriptor() ([]byte, []int) {
+	return file_proto_agent_proto_rawDescGZIP(), []int{4}
+}
+
+type PingResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	NodeId        string                 `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PingResponse) Reset() {
+	*x = PingResponse{}
+	mi := &file_proto_agent_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PingResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PingResponse) ProtoMessage() {}
+
+func (x *PingResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_agent_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PingResponse.ProtoReflect.Descriptor instead.
+func (*PingResponse) Descriptor() ([]byte, []int) {
+	return file_proto_agent_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *PingResponse) GetNodeId() string {
+	if x != nil {
+		return x.NodeId
+	}
+	return ""
+}
+
 type RunServiceResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Started       bool                   `protobuf:"varint,1,opt,name=started,proto3" json:"started,omitempty"`
@@ -247,7 +329,7 @@ type RunServiceResponse struct {
 
 func (x *RunServiceResponse) Reset() {
 	*x = RunServiceResponse{}
-	mi := &file_proto_agent_proto_msgTypes[4]
+	mi := &file_proto_agent_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -259,7 +341,7 @@ func (x *RunServiceResponse) String() string {
 func (*RunServiceResponse) ProtoMessage() {}
 
 func (x *RunServiceResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_agent_proto_msgTypes[4]
+	mi := &file_proto_agent_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -272,7 +354,7 @@ func (x *RunServiceResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RunServiceResponse.ProtoReflect.Descriptor instead.
 func (*RunServiceResponse) Descriptor() ([]byte, []int) {
-	return file_proto_agent_proto_rawDescGZIP(), []int{4}
+	return file_proto_agent_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *RunServiceResponse) GetStarted() bool {
@@ -303,7 +385,7 @@ type RunServiceRequest struct {
 
 func (x *RunServiceRequest) Reset() {
 	*x = RunServiceRequest{}
-	mi := &file_proto_agent_proto_msgTypes[5]
+	mi := &file_proto_agent_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -315,7 +397,7 @@ func (x *RunServiceRequest) String() string {
 func (*RunServiceRequest) ProtoMessage() {}
 
 func (x *RunServiceRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_agent_proto_msgTypes[5]
+	mi := &file_proto_agent_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -328,7 +410,7 @@ func (x *RunServiceRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RunServiceRequest.ProtoReflect.Descriptor instead.
 func (*RunServiceRequest) Descriptor() ([]byte, []int) {
-	return file_proto_agent_proto_rawDescGZIP(), []int{5}
+	return file_proto_agent_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *RunServiceRequest) GetServiceId() string {
@@ -383,7 +465,7 @@ type StopServiceRequest struct {
 
 func (x *StopServiceRequest) Reset() {
 	*x = StopServiceRequest{}
-	mi := &file_proto_agent_proto_msgTypes[6]
+	mi := &file_proto_agent_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -395,7 +477,7 @@ func (x *StopServiceRequest) String() string {
 func (*StopServiceRequest) ProtoMessage() {}
 
 func (x *StopServiceRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_agent_proto_msgTypes[6]
+	mi := &file_proto_agent_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -408,7 +490,7 @@ func (x *StopServiceRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StopServiceRequest.ProtoReflect.Descriptor instead.
 func (*StopServiceRequest) Descriptor() ([]byte, []int) {
-	return file_proto_agent_proto_rawDescGZIP(), []int{6}
+	return file_proto_agent_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *StopServiceRequest) GetServiceId() string {
@@ -434,7 +516,7 @@ type StopServiceResponse struct {
 
 func (x *StopServiceResponse) Reset() {
 	*x = StopServiceResponse{}
-	mi := &file_proto_agent_proto_msgTypes[7]
+	mi := &file_proto_agent_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -446,7 +528,7 @@ func (x *StopServiceResponse) String() string {
 func (*StopServiceResponse) ProtoMessage() {}
 
 func (x *StopServiceResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_agent_proto_msgTypes[7]
+	mi := &file_proto_agent_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -459,7 +541,7 @@ func (x *StopServiceResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StopServiceResponse.ProtoReflect.Descriptor instead.
 func (*StopServiceResponse) Descriptor() ([]byte, []int) {
-	return file_proto_agent_proto_rawDescGZIP(), []int{7}
+	return file_proto_agent_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *StopServiceResponse) GetStopped() bool {
@@ -479,7 +561,7 @@ type DeleteServiceRequest struct {
 
 func (x *DeleteServiceRequest) Reset() {
 	*x = DeleteServiceRequest{}
-	mi := &file_proto_agent_proto_msgTypes[8]
+	mi := &file_proto_agent_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -491,7 +573,7 @@ func (x *DeleteServiceRequest) String() string {
 func (*DeleteServiceRequest) ProtoMessage() {}
 
 func (x *DeleteServiceRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_agent_proto_msgTypes[8]
+	mi := &file_proto_agent_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -504,7 +586,7 @@ func (x *DeleteServiceRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteServiceRequest.ProtoReflect.Descriptor instead.
 func (*DeleteServiceRequest) Descriptor() ([]byte, []int) {
-	return file_proto_agent_proto_rawDescGZIP(), []int{8}
+	return file_proto_agent_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *DeleteServiceRequest) GetServiceId() string {
@@ -530,7 +612,7 @@ type DeleteServiceResponse struct {
 
 func (x *DeleteServiceResponse) Reset() {
 	*x = DeleteServiceResponse{}
-	mi := &file_proto_agent_proto_msgTypes[9]
+	mi := &file_proto_agent_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -542,7 +624,7 @@ func (x *DeleteServiceResponse) String() string {
 func (*DeleteServiceResponse) ProtoMessage() {}
 
 func (x *DeleteServiceResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_agent_proto_msgTypes[9]
+	mi := &file_proto_agent_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -555,7 +637,7 @@ func (x *DeleteServiceResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteServiceResponse.ProtoReflect.Descriptor instead.
 func (*DeleteServiceResponse) Descriptor() ([]byte, []int) {
-	return file_proto_agent_proto_rawDescGZIP(), []int{9}
+	return file_proto_agent_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *DeleteServiceResponse) GetDeleted() bool {
@@ -575,7 +657,7 @@ type LogsRequest struct {
 
 func (x *LogsRequest) Reset() {
 	*x = LogsRequest{}
-	mi := &file_proto_agent_proto_msgTypes[10]
+	mi := &file_proto_agent_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -587,7 +669,7 @@ func (x *LogsRequest) String() string {
 func (*LogsRequest) ProtoMessage() {}
 
 func (x *LogsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_agent_proto_msgTypes[10]
+	mi := &file_proto_agent_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -600,7 +682,7 @@ func (x *LogsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LogsRequest.ProtoReflect.Descriptor instead.
 func (*LogsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_agent_proto_rawDescGZIP(), []int{10}
+	return file_proto_agent_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *LogsRequest) GetServiceId() string {
@@ -626,7 +708,7 @@ type LogsResponse struct {
 
 func (x *LogsResponse) Reset() {
 	*x = LogsResponse{}
-	mi := &file_proto_agent_proto_msgTypes[11]
+	mi := &file_proto_agent_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -638,7 +720,7 @@ func (x *LogsResponse) String() string {
 func (*LogsResponse) ProtoMessage() {}
 
 func (x *LogsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_agent_proto_msgTypes[11]
+	mi := &file_proto_agent_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -651,7 +733,7 @@ func (x *LogsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LogsResponse.ProtoReflect.Descriptor instead.
 func (*LogsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_agent_proto_rawDescGZIP(), []int{11}
+	return file_proto_agent_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *LogsResponse) GetLogs() string {
@@ -678,7 +760,10 @@ const file_proto_agent_proto_rawDesc = "" +
 	"\x10HeartbeatRequest\x12\x17\n" +
 	"\anode_id\x18\x01 \x01(\tR\x06nodeId\"7\n" +
 	"\x11HeartbeatResponse\x12\"\n" +
-	"\facknowledged\x18\x01 \x01(\bR\facknowledged\"Q\n" +
+	"\facknowledged\x18\x01 \x01(\bR\facknowledged\"\r\n" +
+	"\vPingRequest\"'\n" +
+	"\fPingResponse\x12\x17\n" +
+	"\anode_id\x18\x01 \x01(\tR\x06nodeId\"Q\n" +
 	"\x12RunServiceResponse\x12\x18\n" +
 	"\astarted\x18\x01 \x01(\bR\astarted\x12!\n" +
 	"\fcontainer_id\x18\x02 \x01(\tR\vcontainerId\"\xa3\x01\n" +
@@ -707,10 +792,12 @@ const file_proto_agent_proto_rawDesc = "" +
 	"service_id\x18\x01 \x01(\tR\tserviceId\x12!\n" +
 	"\fcontainer_id\x18\x02 \x01(\tR\vcontainerId\"\"\n" +
 	"\fLogsResponse\x12\x12\n" +
-	"\x04logs\x18\x01 \x01(\tR\x04logs2\x8e\x03\n" +
-	"\tNodeAgent\x12;\n" +
+	"\x04logs\x18\x01 \x01(\tR\x04logs2\x8b\x01\n" +
+	"\fControlPlane\x12;\n" +
 	"\bRegister\x12\x16.agent.RegisterRequest\x1a\x17.agent.RegisterResponse\x12>\n" +
-	"\tHeartbeat\x12\x17.agent.HeartbeatRequest\x1a\x18.agent.HeartbeatResponse\x12A\n" +
+	"\tHeartbeat\x12\x17.agent.HeartbeatRequest\x1a\x18.agent.HeartbeatResponse2\xc2\x02\n" +
+	"\tNodeAgent\x12/\n" +
+	"\x04Ping\x12\x12.agent.PingRequest\x1a\x13.agent.PingResponse\x12A\n" +
 	"\n" +
 	"RunService\x12\x18.agent.RunServiceRequest\x1a\x19.agent.RunServiceResponse\x12D\n" +
 	"\vStopService\x12\x19.agent.StopServiceRequest\x1a\x1a.agent.StopServiceResponse\x12J\n" +
@@ -729,36 +816,40 @@ func file_proto_agent_proto_rawDescGZIP() []byte {
 	return file_proto_agent_proto_rawDescData
 }
 
-var file_proto_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_proto_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_proto_agent_proto_goTypes = []any{
 	(*RegisterRequest)(nil),       // 0: agent.RegisterRequest
 	(*RegisterResponse)(nil),      // 1: agent.RegisterResponse
 	(*HeartbeatRequest)(nil),      // 2: agent.HeartbeatRequest
 	(*HeartbeatResponse)(nil),     // 3: agent.HeartbeatResponse
-	(*RunServiceResponse)(nil),    // 4: agent.RunServiceResponse
-	(*RunServiceRequest)(nil),     // 5: agent.RunServiceRequest
-	(*StopServiceRequest)(nil),    // 6: agent.StopServiceRequest
-	(*StopServiceResponse)(nil),   // 7: agent.StopServiceResponse
-	(*DeleteServiceRequest)(nil),  // 8: agent.DeleteServiceRequest
-	(*DeleteServiceResponse)(nil), // 9: agent.DeleteServiceResponse
-	(*LogsRequest)(nil),           // 10: agent.LogsRequest
-	(*LogsResponse)(nil),          // 11: agent.LogsResponse
+	(*PingRequest)(nil),           // 4: agent.PingRequest
+	(*PingResponse)(nil),          // 5: agent.PingResponse
+	(*RunServiceResponse)(nil),    // 6: agent.RunServiceResponse
+	(*RunServiceRequest)(nil),     // 7: agent.RunServiceRequest
+	(*StopServiceRequest)(nil),    // 8: agent.StopServiceRequest
+	(*StopServiceResponse)(nil),   // 9: agent.StopServiceResponse
+	(*DeleteServiceRequest)(nil),  // 10: agent.DeleteServiceRequest
+	(*DeleteServiceResponse)(nil), // 11: agent.DeleteServiceResponse
+	(*LogsRequest)(nil),           // 12: agent.LogsRequest
+	(*LogsResponse)(nil),          // 13: agent.LogsResponse
 }
 var file_proto_agent_proto_depIdxs = []int32{
-	0,  // 0: agent.NodeAgent.Register:input_type -> agent.RegisterRequest
-	2,  // 1: agent.NodeAgent.Heartbeat:input_type -> agent.HeartbeatRequest
-	5,  // 2: agent.NodeAgent.RunService:input_type -> agent.RunServiceRequest
-	6,  // 3: agent.NodeAgent.StopService:input_type -> agent.StopServiceRequest
-	8,  // 4: agent.NodeAgent.DeleteService:input_type -> agent.DeleteServiceRequest
-	10, // 5: agent.NodeAgent.Logs:input_type -> agent.LogsRequest
-	1,  // 6: agent.NodeAgent.Register:output_type -> agent.RegisterResponse
-	3,  // 7: agent.NodeAgent.Heartbeat:output_type -> agent.HeartbeatResponse
-	4,  // 8: agent.NodeAgent.RunService:output_type -> agent.RunServiceResponse
-	7,  // 9: agent.NodeAgent.StopService:output_type -> agent.StopServiceResponse
-	9,  // 10: agent.NodeAgent.DeleteService:output_type -> agent.DeleteServiceResponse
-	11, // 11: agent.NodeAgent.Logs:output_type -> agent.LogsResponse
-	6,  // [6:12] is the sub-list for method output_type
-	0,  // [0:6] is the sub-list for method input_type
+	0,  // 0: agent.ControlPlane.Register:input_type -> agent.RegisterRequest
+	2,  // 1: agent.ControlPlane.Heartbeat:input_type -> agent.HeartbeatRequest
+	4,  // 2: agent.NodeAgent.Ping:input_type -> agent.PingRequest
+	7,  // 3: agent.NodeAgent.RunService:input_type -> agent.RunServiceRequest
+	8,  // 4: agent.NodeAgent.StopService:input_type -> agent.StopServiceRequest
+	10, // 5: agent.NodeAgent.DeleteService:input_type -> agent.DeleteServiceRequest
+	12, // 6: agent.NodeAgent.Logs:input_type -> agent.LogsRequest
+	1,  // 7: agent.ControlPlane.Register:output_type -> agent.RegisterResponse
+	3,  // 8: agent.ControlPlane.Heartbeat:output_type -> agent.HeartbeatResponse
+	5,  // 9: agent.NodeAgent.Ping:output_type -> agent.PingResponse
+	6,  // 10: agent.NodeAgent.RunService:output_type -> agent.RunServiceResponse
+	9,  // 11: agent.NodeAgent.StopService:output_type -> agent.StopServiceResponse
+	11, // 12: agent.NodeAgent.DeleteService:output_type -> agent.DeleteServiceResponse
+	13, // 13: agent.NodeAgent.Logs:output_type -> agent.LogsResponse
+	7,  // [7:14] is the sub-list for method output_type
+	0,  // [0:7] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name
@@ -775,9 +866,9 @@ func file_proto_agent_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_agent_proto_rawDesc), len(file_proto_agent_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   14,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   2,
 		},
 		GoTypes:           file_proto_agent_proto_goTypes,
 		DependencyIndexes: file_proto_agent_proto_depIdxs,

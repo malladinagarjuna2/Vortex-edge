@@ -51,7 +51,7 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer()
-	proto.RegisterNodeAgentServer(grpcServer, server)
+	proto.RegisterControlPlaneServer(grpcServer, server)
 
 	log.Println("Control plane listening on localhost:9001")
 	if err := grpcServer.Serve(listener); err != nil {

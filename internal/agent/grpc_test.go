@@ -67,21 +67,19 @@ func TestGRPC(t *testing.T) {
 	// Create generated gRPC client
 	client := proto.NewNodeAgentClient(conn)
 
-	// Call Heartbeat
-	response, err := client.Heartbeat(
+	// Call Ping
+	response, err := client.Ping(
 		context.Background(),
-		&proto.HeartbeatRequest{
-			NodeId: "node-01",
-		},
+		&proto.PingRequest{},
 	)
 	if err != nil {
-		t.Fatalf("heartbeat failed: %v", err)
+		t.Fatalf("ping failed: %v", err)
 	}
 
-	// Verify response
-	if !response.Acknowledged {
-		t.Fatal("expected heartbeat to be acknowledged")
+	// Verify the agent reports its own identity
+	if response.NodeId != "node-01" {
+		t.Fatalf("expected node-01, got %q", response.NodeId)
 	}
 
-	t.Log("gRPC Heartbeat successful")
+	t.Log("gRPC Ping successful")
 }

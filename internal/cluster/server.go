@@ -51,7 +51,7 @@ import (
 )
 //server ek schema hai 
 type Server struct {
-	proto.UnimplementedNodeAgentServer
+	proto.UnimplementedControlPlaneServer
 
 	registry *registery.NodeRegistry
 }
