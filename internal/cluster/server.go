@@ -67,6 +67,35 @@ func (s *Server) Register(
 	req *proto.RegisterRequest,
 ) (*proto.RegisterResponse, error) {
 
+	existing, err := s.registry.Get(req.NodeId)
+	if err != nil {
+		return nil, err
+	}
+
+	now := time.Now()
+
+	// A reconnecting worker keeps its identity and resource allocations;
+	// only its endpoint and capacity are refreshed. The node ID is the
+	// identity, the address is just where it can be reached right now.
+	if existing != nil {
+		existing.Name = req.Name
+		existing.Address = req.Address
+		existing.CPU = int(req.Cpu)
+		existing.Memory = req.Memory
+		existing.Status = models.NodeReady
+		existing.LastHeartbeat = now
+		existing.UpdatedAt = now
+
+		err = s.registry.Update(existing)
+		if err != nil {
+			return nil, err
+		}
+
+		return &proto.RegisterResponse{
+			Accepted: true,
+		}, nil
+	}
+
 	node := &models.Node{
 		ID:      req.NodeId,
 		Name:    req.Name,
@@ -74,9 +103,15 @@ func (s *Server) Register(
 		Status:  models.NodeReady,
 		CPU:     int(req.Cpu),
 		Memory:  req.Memory,
+
+		// Count registration as the first heartbeat so the health
+		// monitor doesn't mark the node Offline before it sends one.
+		LastHeartbeat: now,
+		CreatedAt:     now,
+		UpdatedAt:     now,
 	}
 
-	err := s.registry.Add(node)
+	err = s.registry.Add(node)
 	if err != nil {
 		return nil, err
 	}
