@@ -19,8 +19,153 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	NodeAgent_Register_FullMethodName      = "/agent.NodeAgent/Register"
-	NodeAgent_Heartbeat_FullMethodName     = "/agent.NodeAgent/Heartbeat"
+	ControlPlane_Register_FullMethodName  = "/agent.ControlPlane/Register"
+	ControlPlane_Heartbeat_FullMethodName = "/agent.ControlPlane/Heartbeat"
+)
+
+// ControlPlaneClient is the client API for ControlPlane service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// ControlPlane is served by the control plane (cmd/vortex).
+// Node agents call it to join the cluster and report liveness.
+type ControlPlaneClient interface {
+	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
+	Heartbeat(ctx context.Context, in *HeartbeatRequest, opts ...grpc.CallOption) (*HeartbeatResponse, error)
+}
+
+type controlPlaneClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewControlPlaneClient(cc grpc.ClientConnInterface) ControlPlaneClient {
+	return &controlPlaneClient{cc}
+}
+
+func (c *controlPlaneClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RegisterResponse)
+	err := c.cc.Invoke(ctx, ControlPlane_Register_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *controlPlaneClient) Heartbeat(ctx context.Context, in *HeartbeatRequest, opts ...grpc.CallOption) (*HeartbeatResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(HeartbeatResponse)
+	err := c.cc.Invoke(ctx, ControlPlane_Heartbeat_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ControlPlaneServer is the server API for ControlPlane service.
+// All implementations must embed UnimplementedControlPlaneServer
+// for forward compatibility.
+//
+// ControlPlane is served by the control plane (cmd/vortex).
+// Node agents call it to join the cluster and report liveness.
+type ControlPlaneServer interface {
+	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
+	Heartbeat(context.Context, *HeartbeatRequest) (*HeartbeatResponse, error)
+	mustEmbedUnimplementedControlPlaneServer()
+}
+
+// UnimplementedControlPlaneServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedControlPlaneServer struct{}
+
+func (UnimplementedControlPlaneServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Register not implemented")
+}
+func (UnimplementedControlPlaneServer) Heartbeat(context.Context, *HeartbeatRequest) (*HeartbeatResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Heartbeat not implemented")
+}
+func (UnimplementedControlPlaneServer) mustEmbedUnimplementedControlPlaneServer() {}
+func (UnimplementedControlPlaneServer) testEmbeddedByValue()                      {}
+
+// UnsafeControlPlaneServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ControlPlaneServer will
+// result in compilation errors.
+type UnsafeControlPlaneServer interface {
+	mustEmbedUnimplementedControlPlaneServer()
+}
+
+func RegisterControlPlaneServer(s grpc.ServiceRegistrar, srv ControlPlaneServer) {
+	// If the following call panics, it indicates UnimplementedControlPlaneServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&ControlPlane_ServiceDesc, srv)
+}
+
+func _ControlPlane_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ControlPlaneServer).Register(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ControlPlane_Register_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ControlPlaneServer).Register(ctx, req.(*RegisterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ControlPlane_Heartbeat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HeartbeatRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ControlPlaneServer).Heartbeat(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ControlPlane_Heartbeat_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ControlPlaneServer).Heartbeat(ctx, req.(*HeartbeatRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// ControlPlane_ServiceDesc is the grpc.ServiceDesc for ControlPlane service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var ControlPlane_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "agent.ControlPlane",
+	HandlerType: (*ControlPlaneServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Register",
+			Handler:    _ControlPlane_Register_Handler,
+		},
+		{
+			MethodName: "Heartbeat",
+			Handler:    _ControlPlane_Heartbeat_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "proto/agent.proto",
+}
+
+const (
+	NodeAgent_Ping_FullMethodName          = "/agent.NodeAgent/Ping"
 	NodeAgent_RunService_FullMethodName    = "/agent.NodeAgent/RunService"
 	NodeAgent_StopService_FullMethodName   = "/agent.NodeAgent/StopService"
 	NodeAgent_DeleteService_FullMethodName = "/agent.NodeAgent/DeleteService"
@@ -30,9 +175,11 @@ const (
 // NodeAgentClient is the client API for NodeAgent service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// NodeAgent is served by every worker (cmd/agent).
+// The control plane calls it to run and manage workloads.
 type NodeAgentClient interface {
-	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
-	Heartbeat(ctx context.Context, in *HeartbeatRequest, opts ...grpc.CallOption) (*HeartbeatResponse, error)
+	Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error)
 	RunService(ctx context.Context, in *RunServiceRequest, opts ...grpc.CallOption) (*RunServiceResponse, error)
 	StopService(ctx context.Context, in *StopServiceRequest, opts ...grpc.CallOption) (*StopServiceResponse, error)
 	DeleteService(ctx context.Context, in *DeleteServiceRequest, opts ...grpc.CallOption) (*DeleteServiceResponse, error)
@@ -47,20 +194,10 @@ func NewNodeAgentClient(cc grpc.ClientConnInterface) NodeAgentClient {
 	return &nodeAgentClient{cc}
 }
 
-func (c *nodeAgentClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
+func (c *nodeAgentClient) Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RegisterResponse)
-	err := c.cc.Invoke(ctx, NodeAgent_Register_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *nodeAgentClient) Heartbeat(ctx context.Context, in *HeartbeatRequest, opts ...grpc.CallOption) (*HeartbeatResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(HeartbeatResponse)
-	err := c.cc.Invoke(ctx, NodeAgent_Heartbeat_FullMethodName, in, out, cOpts...)
+	out := new(PingResponse)
+	err := c.cc.Invoke(ctx, NodeAgent_Ping_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -110,9 +247,11 @@ func (c *nodeAgentClient) Logs(ctx context.Context, in *LogsRequest, opts ...grp
 // NodeAgentServer is the server API for NodeAgent service.
 // All implementations must embed UnimplementedNodeAgentServer
 // for forward compatibility.
+//
+// NodeAgent is served by every worker (cmd/agent).
+// The control plane calls it to run and manage workloads.
 type NodeAgentServer interface {
-	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
-	Heartbeat(context.Context, *HeartbeatRequest) (*HeartbeatResponse, error)
+	Ping(context.Context, *PingRequest) (*PingResponse, error)
 	RunService(context.Context, *RunServiceRequest) (*RunServiceResponse, error)
 	StopService(context.Context, *StopServiceRequest) (*StopServiceResponse, error)
 	DeleteService(context.Context, *DeleteServiceRequest) (*DeleteServiceResponse, error)
@@ -127,11 +266,8 @@ type NodeAgentServer interface {
 // pointer dereference when methods are called.
 type UnimplementedNodeAgentServer struct{}
 
-func (UnimplementedNodeAgentServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method Register not implemented")
-}
-func (UnimplementedNodeAgentServer) Heartbeat(context.Context, *HeartbeatRequest) (*HeartbeatResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method Heartbeat not implemented")
+func (UnimplementedNodeAgentServer) Ping(context.Context, *PingRequest) (*PingResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Ping not implemented")
 }
 func (UnimplementedNodeAgentServer) RunService(context.Context, *RunServiceRequest) (*RunServiceResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method RunService not implemented")
@@ -166,38 +302,20 @@ func RegisterNodeAgentServer(s grpc.ServiceRegistrar, srv NodeAgentServer) {
 	s.RegisterService(&NodeAgent_ServiceDesc, srv)
 }
 
-func _NodeAgent_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RegisterRequest)
+func _NodeAgent_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PingRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(NodeAgentServer).Register(ctx, in)
+		return srv.(NodeAgentServer).Ping(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: NodeAgent_Register_FullMethodName,
+		FullMethod: NodeAgent_Ping_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NodeAgentServer).Register(ctx, req.(*RegisterRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _NodeAgent_Heartbeat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HeartbeatRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(NodeAgentServer).Heartbeat(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: NodeAgent_Heartbeat_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NodeAgentServer).Heartbeat(ctx, req.(*HeartbeatRequest))
+		return srv.(NodeAgentServer).Ping(ctx, req.(*PingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -282,12 +400,8 @@ var NodeAgent_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*NodeAgentServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Register",
-			Handler:    _NodeAgent_Register_Handler,
-		},
-		{
-			MethodName: "Heartbeat",
-			Handler:    _NodeAgent_Heartbeat_Handler,
+			MethodName: "Ping",
+			Handler:    _NodeAgent_Ping_Handler,
 		},
 		{
 			MethodName: "RunService",

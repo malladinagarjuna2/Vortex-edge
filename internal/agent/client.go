@@ -10,10 +10,14 @@ import (
 	"vortex-edge/proto"
 )
 
-// Client communicates with a Node Agent through gRPC.
+// Client talks gRPC to either side of the cluster: agents use the
+// ControlPlane methods (Register, Heartbeat), the control plane uses the
+// NodeAgent methods (Ping, RunService, ...). Which ones work depends on
+// what the address is serving.
 type Client struct {
-	conn   *grpc.ClientConn
-	client proto.NodeAgentClient
+	conn         *grpc.ClientConn
+	client       proto.NodeAgentClient
+	controlPlane proto.ControlPlaneClient
 }
 
 // NewClient creates a new gRPC client.
@@ -28,14 +32,15 @@ func NewClient(address string) (*Client, error) {
 
 	return &Client{
 		conn:   conn,
-		client: proto.NewNodeAgentClient(conn),
+		client:       proto.NewNodeAgentClient(conn),
+		controlPlane: proto.NewControlPlaneClient(conn),
 	}, nil
 }
 
 func (c *Client) Heartbeat(nodeID string) (bool, error) {
 	ctx := context.Background()
 
-	response, err := c.client.Heartbeat(
+	response, err := c.controlPlane.Heartbeat(
 		ctx,
 		&proto.HeartbeatRequest{
 			NodeId: nodeID,
@@ -51,7 +56,7 @@ func (c *Client) Heartbeat(nodeID string) (bool, error) {
 func (c *Client) Register(node *models.Node) (bool, error) {
 	ctx := context.Background()
 
-	response, err := c.client.Register(
+	response, err := c.controlPlane.Register(
 		ctx,
 		&proto.RegisterRequest{
 			NodeId:  node.ID,
@@ -100,4 +105,17 @@ func (c *Client) Logs(
     ctx := context.Background()
 
     return c.client.Logs(ctx, req)
+}
+
+// Ping returns the node ID of the agent serving at this address.
+func (c *Client) Ping() (string, error) {
+	response, err := c.client.Ping(
+		context.Background(),
+		&proto.PingRequest{},
+	)
+	if err != nil {
+		return "", err
+	}
+
+	return response.NodeId, nil
 }

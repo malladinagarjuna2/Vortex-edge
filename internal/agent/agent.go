@@ -23,13 +23,14 @@ func(a*Agent)Node() *models.Node{
 	 return a.node
 }
 
-func (a*Agent)Heartbeat(
-	ctx context.Context,	
-	req *proto.HeartbeatRequest,
-
-)(*proto.HeartbeatResponse,error){
-	return &proto.HeartbeatResponse{
-		Acknowledged: true,
+// Ping answers with this agent's node ID so the caller can confirm it
+// reached the right node, not just an open port.
+func (a *Agent) Ping(
+	ctx context.Context,
+	req *proto.PingRequest,
+) (*proto.PingResponse, error) {
+	return &proto.PingResponse{
+		NodeId: a.node.ID,
 	}, nil
 }
 
